@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+    - name: Install fzf 
+      become: true
+      become_user: root
+      apt:
+        state: present
+        name:
+          - fzf
+
+    - name: Install fzf zsh plugin
+      ansible.builtin.git:
+              repo: https://github.com/unixorn/fzf-zsh-plugin.git
+              dest: ~/.oh-my-zsh/plugins/

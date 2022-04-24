@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install nodejs
+      become: true
+      become_user: root
+      apt:
+        state: present
+        name:
+          - nodejs
+          - npm
+
+    - name: Install node-red 
+      become: true
+      become_user: root
+      npm:
+        state: present
+        unsafe_perm: yes
+        global: yes
+        name: node-red
+
+    - name: Install node-red-admin
+      become: true
+      become_user: root
+      npm:
+        state: present
+        unsafe_perm: yes
+        global: yes
+        name: node-red-admin
+
+    - name: Allow port 1880
+      become: true
+      become_user: root
+      community.general.ufw:
+        rule: allow
+        port: 1880

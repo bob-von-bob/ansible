@@ -1,0 +1,57 @@
+# This file installs tools developers tools on Ubuntu
+
+- hosts: localhost
+  tasks:
+    - name: Install development tools 
+      become: true
+      become_user: root
+      apt:
+        state: present
+        name:
+          - git
+          - cmake
+          - ripgrep
+
+    - name: Install neovim dependencies
+      become: true
+      become_user: root  
+      apt:
+              state: present
+              name:
+                - ninja-build 
+                - gettext 
+                - libtool 
+                - libtool-bin 
+                - autoconf 
+                - automake 
+                - cmake 
+                - g++ 
+                - pkg-config 
+                - unzip 
+                - curl 
+                - doxygen
+
+    - name: Clone neovim repository (nightly)
+      ansible.builtin.git:
+              repo: https://github.com/neovim/neovim.git
+              version: nightly
+              dest: ~/neovim
+
+    - name: Make neovim
+      become: yes
+      become_user: root
+      community.general.make:
+        chdir: /home/ubuntu/neovim
+
+    - name: Install neovim
+      become: yes
+      become_user: root
+      community.general.make:
+        chdir: /home/ubuntu/neovim
+        target: install
+
+    - name: Install vim-plug manager for nvim
+      command: curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    - name: Install all plugins set for nvim
+      command: nvim -c "PlugInstall" -c ":qa!"
