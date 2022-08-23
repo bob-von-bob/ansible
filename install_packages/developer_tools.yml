@@ -55,3 +55,13 @@
 
     - name: Install all plugins set for nvim
       command: nvim -c "PlugInstall" -c ":qa!"
+
+    - name: Install clang-format
+      become: true
+      become_user: root  
+      tags:
+        - clang
+      apt:
+              state: present
+              name:
+                - clang-format
